@@ -12,7 +12,7 @@ export async function signUp({ name, email, password }: SignUpSchema) {
 
 	const user = await databases.createDocument(
 		appwriteConfig.databaseId,
-		appwriteConfig.userCollectionId,
+		appwriteConfig.usersCollectionId,
 		ID.unique(),
 		{
 			accountId: newAccount.$id,
