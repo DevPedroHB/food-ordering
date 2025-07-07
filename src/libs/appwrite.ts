@@ -3,7 +3,7 @@ import { Account, Avatars, Client, Databases } from "react-native-appwrite";
 
 export const appwriteConfig = {
 	databaseId: env.EXPO_PUBLIC_APPWRITE_DATABASE_ID,
-	userCollectionId: "68683e95000ba135b03d",
+	userCollectionId: env.EXPO_PUBLIC_APPWRITE_USER_COLLECTION_ID,
 };
 
 export const client = new Client();

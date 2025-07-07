@@ -1,4 +1,5 @@
 import { account, appwriteConfig, databases } from "@/libs/appwrite";
+import { useQuery } from "@tanstack/react-query";
 import { Query } from "react-native-appwrite";
 
 export async function getCurrentUser() {
@@ -11,4 +12,13 @@ export async function getCurrentUser() {
 	);
 
 	return user.documents[0];
+}
+
+export function useGetCurrentUser() {
+	const query = useQuery({
+		queryKey: ["current-user"],
+		queryFn: getCurrentUser,
+	});
+
+	return query;
 }

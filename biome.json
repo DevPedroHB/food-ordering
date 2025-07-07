@@ -23,6 +23,9 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
+			"correctness": {
+				"useHookAtTopLevel": "off"
+			},
 			"recommended": true
 		}
 	},
