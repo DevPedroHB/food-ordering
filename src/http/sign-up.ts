@@ -1,0 +1,26 @@
+import { account, appwriteConfig, avatars, databases } from "@/libs/appwrite";
+import type { SignUpSchema } from "@/types/schemas/sign-up-schema";
+import { ID } from "react-native-appwrite";
+import { signIn } from "./sign-in";
+
+export async function signUp({ name, email, password }: SignUpSchema) {
+	const newAccount = await account.create(ID.unique(), email, password, name);
+
+	await signIn({ email, password });
+
+	const avatarUrl = await avatars.getInitialsURL(name);
+
+	const user = await databases.createDocument(
+		appwriteConfig.databaseId,
+		appwriteConfig.userCollectionId,
+		ID.unique(),
+		{
+			accountId: newAccount.$id,
+			name,
+			email,
+			avatarUrl,
+		},
+	);
+
+	return user;
+}

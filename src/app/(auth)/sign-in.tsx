@@ -1,28 +1,41 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { signIn } from "@/http/sign-in";
 import {
 	type SignInSchema,
 	signInSchema,
 } from "@/types/schemas/sign-in-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { Link, router } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
-import { Text, View } from "react-native";
+import { Alert, Text, View } from "react-native";
 
 export default function SignIn() {
-	const { control, handleSubmit } = useForm<SignInSchema>({
+	const {
+		control,
+		handleSubmit,
+		formState: { isSubmitting },
+	} = useForm<SignInSchema>({
 		resolver: zodResolver(signInSchema),
-		defaultValues: {
-			email: "",
-			password: "",
+	});
+
+	const { mutateAsync } = useMutation({
+		mutationKey: ["sign-in"],
+		mutationFn: signIn,
+		onError(error) {
+			Alert.alert("Error", error.message);
+		},
+		onSuccess() {
+			Alert.alert("Success", "You have successfully signed in!");
+
+			router.replace("/");
 		},
 	});
 
-	function handleSignIn(data: SignInSchema) {
-		console.log(data);
-
-		router.replace("/");
+	async function handleSignIn(data: SignInSchema) {
+		await mutateAsync(data);
 	}
 
 	return (
@@ -30,16 +43,15 @@ export default function SignIn() {
 			<Controller
 				name="email"
 				control={control}
-				render={({ field: { onChange, onBlur, value } }) => (
+				render={({ field }) => (
 					<View className="w-full">
 						<Label>Email</Label>
 						<Input
 							autoCapitalize="none"
 							placeholder="Enter your email"
 							keyboardType="email-address"
-							value={value}
-							onChangeText={onChange}
-							onBlur={onBlur}
+							value={field.value}
+							onChangeText={field.onChange}
 						/>
 					</View>
 				)}
@@ -47,21 +59,20 @@ export default function SignIn() {
 			<Controller
 				name="password"
 				control={control}
-				render={({ field: { onChange, onBlur, value } }) => (
+				render={({ field }) => (
 					<View className="w-full">
 						<Label>Password</Label>
 						<Input
 							autoCapitalize="none"
 							placeholder="Enter your password"
 							secureTextEntry={true}
-							value={value}
-							onChangeText={onChange}
-							onBlur={onBlur}
+							value={field.value}
+							onChangeText={field.onChange}
 						/>
 					</View>
 				)}
 			/>
-			<Button onPress={handleSubmit(handleSignIn)}>
+			<Button onPress={handleSubmit(handleSignIn)} isLoading={isSubmitting}>
 				<Button.Title>Sign In</Button.Title>
 			</Button>
 			<View className="flex flex-row justify-center gap-2 mt-5">
