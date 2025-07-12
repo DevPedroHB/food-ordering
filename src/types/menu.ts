@@ -8,4 +8,5 @@ export interface Menu extends Models.Document {
 	calories: number;
 	protein: number;
 	price: number;
+	type: string;
 }

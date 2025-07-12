@@ -8,6 +8,9 @@ import {
 } from "react-native-appwrite";
 
 export const appwriteConfig = {
+	endpoint: env.EXPO_PUBLIC_APPWRITE_ENDPOINT,
+	projectId: env.EXPO_PUBLIC_APPWRITE_PROJECT_ID,
+	platform: env.EXPO_PUBLIC_APPWRITE_PLATFORM,
 	databaseId: env.EXPO_PUBLIC_APPWRITE_DATABASE_ID,
 	usersCollectionId: env.EXPO_PUBLIC_APPWRITE_USERS_COLLECTION_ID,
 	categoriesCollectionId: env.EXPO_PUBLIC_APPWRITE_CATEGORIES_COLLECTION_ID,
@@ -22,9 +25,9 @@ export const appwriteConfig = {
 export const client = new Client();
 
 client
-	.setEndpoint(env.EXPO_PUBLIC_APPWRITE_ENDPOINT)
-	.setProject(env.EXPO_PUBLIC_APPWRITE_PROJECT_ID)
-	.setPlatform(env.EXPO_PUBLIC_APPWRITE_PLATFORM);
+	.setEndpoint(appwriteConfig.endpoint)
+	.setProject(appwriteConfig.projectId)
+	.setPlatform(appwriteConfig.platform);
 
 export const account = new Account(client);
 

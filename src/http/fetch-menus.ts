@@ -1,25 +1,26 @@
 import { appwriteConfig, databases } from "@/libs/appwrite";
+import type { Menu } from "@/types/menu";
 import { useQuery } from "@tanstack/react-query";
 import { Query } from "react-native-appwrite";
 
-export interface FetchMenusRequest {
+export type FetchMenusRequest = {
 	category?: string;
 	query?: string;
-}
+};
 
 export async function fetchMenus({ category, query }: FetchMenusRequest) {
 	const queries: string[] = [];
 
-	if (category) queries.push(Query.equal("category", category));
+	if (category) queries.push(Query.equal("categories", category));
 	if (query) queries.push(Query.search("name", query));
 
-	const menu = await databases.listDocuments(
+	const menus = await databases.listDocuments<Menu>(
 		appwriteConfig.databaseId,
 		appwriteConfig.menusCollectionId,
 		queries,
 	);
 
-	return menu.documents;
+	return menus.documents;
 }
 
 export function useFetchMenus({ category, query }: FetchMenusRequest) {

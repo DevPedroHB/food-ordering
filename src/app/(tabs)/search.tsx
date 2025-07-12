@@ -1,22 +1,22 @@
 import { CartButton } from "@/components/cart-button";
+import { Filter } from "@/components/filter";
+import { MenuCard } from "@/components/menu-card";
+import { SearchBar } from "@/components/search-bar";
 import { useFetchCategories } from "@/http/fetch-categories";
 import { type FetchMenusRequest, useFetchMenus } from "@/http/fetch-menus";
 import clsx from "clsx";
 import { useLocalSearchParams } from "expo-router";
-import React from "react";
 import { FlatList, SafeAreaView, Text, View } from "react-native";
 
 export default function Search() {
-	const { category, query } =
-		useLocalSearchParams<Partial<FetchMenusRequest>>();
+	const searchParams = useLocalSearchParams<FetchMenusRequest>();
 
 	const { data: menus, isLoading: isMenuLoading } = useFetchMenus({
-		category,
-		query,
+		category: searchParams.category,
+		query: searchParams.query,
 	});
 
-	const { data: categories, isLoading: isCategoriesLoading } =
-		useFetchCategories();
+	const { data: categories } = useFetchCategories();
 
 	return (
 		<SafeAreaView className="bg-white h-full">
@@ -32,7 +32,7 @@ export default function Search() {
 								!isFirstRightColItem ? "mt-10" : "mt-0",
 							)}
 						>
-							<MenuCard item={item as MenuItem} />
+							<MenuCard menu={item} />
 						</View>
 					);
 				}}
