@@ -1,5 +1,6 @@
 import { account, appwriteConfig, avatars, databases } from "@/libs/appwrite";
 import type { SignUpSchema } from "@/types/schemas/sign-up-schema";
+import { useMutation } from "@tanstack/react-query";
 import { ID } from "react-native-appwrite";
 import { signIn } from "./sign-in";
 
@@ -23,4 +24,11 @@ export async function signUp({ name, email, password }: SignUpSchema) {
 	);
 
 	return user;
+}
+
+export function useSingUp() {
+	return useMutation({
+		mutationKey: ["sign-up"],
+		mutationFn: signUp,
+	});
 }

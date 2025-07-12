@@ -1,4 +1,4 @@
-export const seed = {
+export const seedData = {
 	categories: [
 		{ name: "Burgers", description: "Juicy grilled burgers" },
 		{ name: "Pizzas", description: "Oven-baked cheesy pizzas" },

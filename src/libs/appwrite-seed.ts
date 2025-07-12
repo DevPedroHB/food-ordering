@@ -1,4 +1,4 @@
-import { seed } from "@/constants/seed";
+import { seedData } from "@/constants/seed-data";
 import { ID } from "react-native-appwrite";
 import { appwriteConfig, databases, storage } from "./appwrite";
 
@@ -58,10 +58,12 @@ export async function appwriteSeed() {
 
 	await clearStorage();
 
+	console.log("✅ Cleared all");
+
 	// 2. Create Categories
 	const categoryMap: Record<string, string> = {};
 
-	for (const cat of seed.categories) {
+	for (const cat of seedData.categories) {
 		const doc = await databases.createDocument(
 			appwriteConfig.databaseId,
 			appwriteConfig.categoriesCollectionId,
@@ -72,10 +74,12 @@ export async function appwriteSeed() {
 		categoryMap[cat.name] = doc.$id;
 	}
 
+	console.log("✅ Created categories.");
+
 	// 3. Create Customizations
 	const customizationMap: Record<string, string> = {};
 
-	for (const cus of seed.customizations) {
+	for (const cus of seedData.customizations) {
 		const doc = await databases.createDocument(
 			appwriteConfig.databaseId,
 			appwriteConfig.customizationsCollectionId,
@@ -90,10 +94,12 @@ export async function appwriteSeed() {
 		customizationMap[cus.name] = doc.$id;
 	}
 
+	console.log("✅ Created customizations.");
+
 	// 4. Create Menu Items
 	const menuMap: Record<string, string> = {};
 
-	for (const item of seed.menu) {
+	for (const item of seedData.menu) {
 		const uploadedImage = await uploadImageToStorage(item.imageUrl);
 
 		const doc = await databases.createDocument(
@@ -114,6 +120,8 @@ export async function appwriteSeed() {
 
 		menuMap[item.name] = doc.$id;
 
+		console.log("✅ Created menu items.");
+
 		// 5. Create menu_customizations
 		for (const cusName of item.customizations) {
 			await databases.createDocument(
@@ -128,5 +136,9 @@ export async function appwriteSeed() {
 		}
 	}
 
-	console.log("✅ Seeding complete.");
+	console.log("✅ Created menu customizations.");
+
+	return {
+		message: "✅ Seeding complete.",
+	};
 }

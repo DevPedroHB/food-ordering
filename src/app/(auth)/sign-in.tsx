@@ -1,13 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { signIn } from "@/http/sign-in";
+import { useSignIn } from "@/http/sign-in";
 import {
 	type SignInSchema,
 	signInSchema,
 } from "@/types/schemas/sign-in-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { Link, router } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { Alert, Text, View } from "react-native";
@@ -21,21 +20,19 @@ export default function SignIn() {
 		resolver: zodResolver(signInSchema),
 	});
 
-	const { mutateAsync } = useMutation({
-		mutationKey: ["sign-in"],
-		mutationFn: signIn,
-		onError(error) {
-			Alert.alert("Error", error.message);
-		},
-		onSuccess() {
-			Alert.alert("Success", "You have successfully signed in!");
-
-			router.replace("/");
-		},
-	});
+	const { mutateAsync } = useSignIn();
 
 	async function handleSignIn(data: SignInSchema) {
-		await mutateAsync(data);
+		await mutateAsync(data, {
+			onError(error) {
+				Alert.alert("Error", error.message);
+			},
+			onSuccess() {
+				Alert.alert("Success", "You have successfully signed in!");
+
+				router.replace("/");
+			},
+		});
 	}
 
 	return (

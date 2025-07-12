@@ -1,13 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { signUp } from "@/http/sign-up";
+import { useSingUp } from "@/http/sign-up";
 import {
 	type SignUpSchema,
 	signUpSchema,
 } from "@/types/schemas/sign-up-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { Link, router } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { Alert, Text, View } from "react-native";
@@ -21,21 +20,19 @@ export default function SignUp() {
 		resolver: zodResolver(signUpSchema),
 	});
 
-	const { mutateAsync } = useMutation({
-		mutationKey: ["sign-up"],
-		mutationFn: signUp,
-		onError(error) {
-			Alert.alert("Error", error.message);
-		},
-		onSuccess() {
-			Alert.alert("Success", "You have successfully signed up!");
-
-			router.replace("/");
-		},
-	});
+	const { mutateAsync } = useSingUp();
 
 	async function handleSignUp(data: SignUpSchema) {
-		await mutateAsync(data);
+		await mutateAsync(data, {
+			onError(error) {
+				Alert.alert("Error", error.message);
+			},
+			onSuccess() {
+				Alert.alert("Success", "You have successfully signed up!");
+
+				router.replace("/");
+			},
+		});
 	}
 
 	return (
