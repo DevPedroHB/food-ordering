@@ -1,4 +1,5 @@
 import { appwriteConfig } from "@/libs/appwrite";
+import { useCartStore } from "@/stores/cart-store";
 import type { Menu } from "@/types/menu";
 import { Image, Platform, Text, TouchableOpacity } from "react-native";
 
@@ -8,6 +9,17 @@ interface IMenuCard {
 
 export function MenuCard({ menu }: IMenuCard) {
 	const imageUri = `${menu.imageUrl}?project=${appwriteConfig.projectId}`;
+	const { addItem } = useCartStore();
+
+	function handleAddItem() {
+		addItem({
+			id: menu.$id,
+			name: menu.name,
+			price: menu.price,
+			imageUrl: menu.imageUrl,
+			customizations: [],
+		});
+	}
 
 	return (
 		<TouchableOpacity
@@ -33,7 +45,9 @@ export function MenuCard({ menu }: IMenuCard) {
 				From ${menu.price}
 			</Text>
 			<TouchableOpacity>
-				<Text className="text-primary paragraph-bold">Add to Cart +</Text>
+				<Text onPress={handleAddItem} className="text-primary paragraph-bold">
+					Add to Cart +
+				</Text>
 			</TouchableOpacity>
 		</TouchableOpacity>
 	);

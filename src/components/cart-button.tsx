@@ -1,9 +1,11 @@
 import { icons } from "@/constants/icons";
+import { useCartStore } from "@/stores/cart-store";
 import { router } from "expo-router";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 
 export function CartButton() {
-	const totalItems = 10;
+	const { getTotalItems } = useCartStore();
+	const totalItems = getTotalItems();
 
 	return (
 		<TouchableOpacity className="cart-btn" onPress={() => router.push("/cart")}>

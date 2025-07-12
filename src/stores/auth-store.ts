@@ -5,7 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-interface IAuthStore {
+export interface AuthStore {
 	user?: User | null;
 	isLoading: boolean;
 	setUser: (user: User | null) => void;
@@ -14,7 +14,7 @@ interface IAuthStore {
 }
 
 export const useAuthStore = create(
-	persist<IAuthStore>(
+	persist<AuthStore>(
 		(set) => ({
 			user: null,
 			isLoading: true,
